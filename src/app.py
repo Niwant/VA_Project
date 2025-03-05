@@ -26,14 +26,16 @@ if st.sidebar.button("Search Hotels"):
     if not data.empty:
         st.header(f"Hotel Insights for {selected_location}")
 
-        # Display Data Table
-        st.write("Hotel Data Preview:")
-        st.dataframe(data)
 
         # Interactive Map with Hotel Selection
         # Hotel Map with Clickable Markers
         st.subheader("Interactive Hotels Map")
         create_folium_map(data)  # Display map
+        
+
+        # Display Data Table
+        st.write("Hotel Data Preview:")
+        st.dataframe(data)
 
         # Dropdown for selecting a hotel
         hotel_options = {row["name"]: row for _, row in data.iterrows()}
