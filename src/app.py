@@ -50,13 +50,12 @@ if st.sidebar.button("🔎 Search Hotels"):
             # Interactive Hotel Map
             st.subheader("🗺️ Interactive Hotel Map")
             create_folium_map(data)
+            
 
-        with col2:
-            # Data Preview in an Expander
-            st.subheader("📊 Data Preview")
-            with st.expander("🔎 Click to Expand Data Preview"):
-                st.dataframe(data.style.set_properties(**{'background-color': 'white', 'color': 'black'}))
-
+        # Data Preview in an Expander
+        st.subheader("📊 Data Preview")
+        with st.expander("🔎 Click to Expand Data Preview"):
+            st.dataframe(data.style.set_properties(**{'background-color': 'white', 'color': 'black'}))
         # Hotel Selection Dropdown
         hotel_options = {row["name"]: row for _, row in data.iterrows()}
         selected_hotel_name = st.selectbox("🏨 Select a hotel to view price trends:", ["None"] + list(hotel_options.keys()))
@@ -73,13 +72,13 @@ if st.sidebar.button("🔎 Search Hotels"):
         # Layout for Visualizations
         col3, col4 = st.columns(2)
 
-        with col3:
-            st.subheader("📍 Best Hotel Locations")
-            st.altair_chart(best_areas_chart(data), use_container_width=True)
+        # with col3:
+        #     st.subheader("📍 Best Hotel Locations")
+        #     st.altair_chart(best_areas_chart(data), use_container_width=True)
 
-        with col4:
-            st.subheader("⚖️ Hotel Sorting & Features")
-            st.altair_chart(hotel_sorting_chart(data), use_container_width=True)
+        # with col4:
+        st.subheader("⚖️ Hotel Sorting & Features")
+        st.altair_chart(hotel_sorting_chart(data), use_container_width=True)
 
         # Industry Trends
         st.subheader("📊 Booking & Cancellation Trends")

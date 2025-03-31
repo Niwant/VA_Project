@@ -47,7 +47,7 @@ def fetch_google_hotels(location, checkin, checkout, guests=1, num_results=10):
         for hotel in hotels:
             extracted_data.append({
                 "name": hotel.get("name", "N/A"),
-                "address": hotel.get("description", "N/A"),
+                "description": hotel.get("description", "N/A"),
                 "price": hotel.get("rate_per_night", {}).get("extracted_lowest", None),
                 "rating": hotel.get("overall_rating", None),
                 "reviews": hotel.get("reviews", None),
