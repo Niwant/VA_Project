@@ -25,8 +25,8 @@ export function AppSidebar() {
   const [guests, setGuests] = useState(2);
 
   return (
-    <Sidebar className="bg-zinc-900  w-[300px]">
-      <SidebarContent className="p-4 space-y-6">
+    <Sidebar>
+      <SidebarContent >
         <SidebarGroup>
           <SidebarGroupLabel>Hotel Search</SidebarGroupLabel>
           <SidebarGroupContent>

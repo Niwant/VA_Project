@@ -10,9 +10,11 @@ import AnalyzePage from './components/business/analyze' // <- create this compon
 
 function App() {
   return (
+    
     <SidebarProvider>
+      <div className='flex w-full'>
       <AppSidebar />
-      <main className="p-4">
+      <main className="flex flex-wrap w-full">
         <SidebarTrigger />
 
         <Routes>
@@ -29,7 +31,9 @@ function App() {
           <Route path="/analyze" element={<AnalyzePage />} />
         </Routes>
       </main>
+      </div>
     </SidebarProvider>
+    
   )
 }
 

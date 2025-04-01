@@ -19,7 +19,7 @@ const hotels: Hotel[] = [
 const HotelList: React.FC = () => {
     const navigate = useNavigate()
     return (
-        <div className="">
+        <div className="flex flex-wrap gap-4 p-4">
             {hotels.map((hotel) => (
                 <Card key={hotel.id} className="shadow-md">
                     <CardHeader>
