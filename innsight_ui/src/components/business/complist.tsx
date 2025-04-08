@@ -10,23 +10,42 @@ interface Hotel {
 }
 
 
-const hotels: Hotel[] = [
-    { id: 1, name: "Hotel Sunshine", location: "New York", price: "$200/night" },
-    { id: 2, name: "Ocean View Resort", location: "California", price: "$300/night" },
-    { id: 3, name: "Mountain Retreat", location: "Colorado", price: "$250/night" },
-];
+const hotels = [
+    {
+      id: 1,
+      name: "Embassy Suites by Hilton Charlotte Uptown",
+      lat: 35.221813,
+      lng: -80.84267,
+      price: 189 // USD per night
+    },
+    {
+      id: 2,
+      name: "HYATT house Charlotte Airport",
+      lat: 35.174047,
+      lng: -80.885982,
+      price: 129 // USD per night
+    },
+    {
+      id: 3,
+      name: "The Westin Charlotte",
+      lat: 35.2216,
+      lng: -80.8473,
+      price: 215 // USD per night
+    }
+  ];
+  
 
 const HotelList: React.FC = () => {
     const navigate = useNavigate()
     return (
         <div className="flex flex-wrap gap-4 p-4">
             {hotels.map((hotel) => (
-                <Card key={hotel.id} className="shadow-md">
+                <Card key={hotel.id} className="shadow-md w-75">
                     <CardHeader>
                         <CardTitle>{hotel.name}</CardTitle>
                     </CardHeader>
                     <CardContent>
-                        <p>Location: {hotel.location}</p>
+                        {/* <p>Location: {hotel.location}</p> */}
                         <p>Price: {hotel.price}</p>
                     </CardContent>
                     <CardFooter>
