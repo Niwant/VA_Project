@@ -59,7 +59,7 @@ const amenityOptions = [
   { id: 61, label: "EV charger" },
 ];
 
-export function AppSidebar() {
+export function AppSidebar({ onSearchResult }) {
   const [checkIn, setCheckIn] = useState(new Date());
   const [checkOut, setCheckOut] = useState(new Date());
   const [guests, setGuests] = useState(2);
@@ -70,6 +70,7 @@ export function AppSidebar() {
   const [rating, setRating] = useState("");
   const [propertyTypes, setPropertyTypes] = useState<number[]>([]);
   const [amenitiesSelected, setAmenitiesSelected] = useState<number[]>([]);
+  const [hotelClass, setHotelClass] = useState<number[]>([]);
 
   const handlePropertyChange = (id: number, checked: boolean) => {
     setPropertyTypes((prev) =>
@@ -83,8 +84,14 @@ export function AppSidebar() {
     );
   };
 
-  const handleSearchClick = () => {
-    HandleSearch.handleSearch({
+  const handleClassChange = (id: number, checked: boolean) => {
+    setHotelClass((prev) =>
+      checked ? [...prev, id] : prev.filter((val) => val !== id)
+    );
+  };
+
+  const handleSearchClick = async () => {
+    const payload = {
       destination,
       checkIn,
       checkOut,
@@ -95,7 +102,13 @@ export function AppSidebar() {
       property_types: propertyTypes.join(","),
       amenities: amenitiesSelected.join(","),
       rating,
-    });
+      hotel_class: hotelClass.join(","),
+    };
+
+    const results = await HandleSearch.handleSearch(payload);
+    if (results && onSearchResult) {
+      onSearchResult(results);
+    }
   };
 
   return (
@@ -215,6 +228,27 @@ export function AppSidebar() {
                     <SelectItem value="9">4.5+ stars</SelectItem>
                   </SelectContent>
                 </Select>
+              </div>
+
+              {/* Hotel Class */}
+              <div>
+                <Label>Hotel Class</Label>
+                <div className="space-y-2 mt-1">
+                  {[2, 3, 4, 5].map((cls) => (
+                    <div key={cls} className="flex items-center gap-2">
+                      <Checkbox
+                        id={`class-${cls}`}
+                        checked={hotelClass.includes(cls)}
+                        onCheckedChange={(checked) =>
+                          handleClassChange(cls, Boolean(checked))
+                        }
+                      />
+                      <label htmlFor={`class-${cls}`} className="text-sm">
+                        {cls}-star
+                      </label>
+                    </div>
+                  ))}
+                </div>
               </div>
 
               {/* Property Types */}
