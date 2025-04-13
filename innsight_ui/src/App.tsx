@@ -57,7 +57,7 @@ function App() {
               </div>
             }
           />
-          <Route path="/analyze" element={<AnalyzePage />} />
+          <Route path="/analyze/:id" element={<AnalyzePage />} />
         </Routes>
       </main>
       </div>

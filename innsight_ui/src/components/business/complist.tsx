@@ -49,7 +49,7 @@ const HotelList: React.FC = () => {
                         <p>Price: {hotel.price}</p>
                     </CardContent>
                     <CardFooter>
-                        <button className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600" onClick={()=> navigate('/analyze')}>
+                        <button className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600" onClick={()=> navigate(`/analyze/${hotel.id}`)}>
                             Analyze
                         </button>
                     </CardFooter>
