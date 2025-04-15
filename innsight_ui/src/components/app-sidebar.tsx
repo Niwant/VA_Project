@@ -16,7 +16,8 @@ import {
   SelectItem,
 } from "../components/ui/select";
 import { Checkbox } from "../components/ui/checkbox";
-import HandleSearch from "../api/hotelsApi";
+import HotelsAPi from "../api/hotelsApi";
+import { useHotelContext } from "../context/Hotels";
 
 import {
   Sidebar,
@@ -71,6 +72,7 @@ export function AppSidebar({ onSearchResult }) {
   const [propertyTypes, setPropertyTypes] = useState<number[]>([]);
   const [amenitiesSelected, setAmenitiesSelected] = useState<number[]>([]);
   const [hotelClass, setHotelClass] = useState<number[]>([]);
+  const { setHotels } = useHotelContext();
 
   const handlePropertyChange = (id: number, checked: boolean) => {
     setPropertyTypes((prev) =>
@@ -105,10 +107,11 @@ export function AppSidebar({ onSearchResult }) {
       hotel_class: hotelClass.join(","),
     };
 
-    const results = await HandleSearch.handleSearch(payload);
+    const results =await HotelsAPi.hotelSearch(payload);
     if (results && onSearchResult) {
       onSearchResult(results);
     }
+    setHotels(results);
   };
 
   return (

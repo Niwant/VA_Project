@@ -1,68 +1,94 @@
-import { Routes, Route } from 'react-router-dom'
-import { useState } from 'react'
+import { Routes, Route, useLocation } from 'react-router-dom'
 import { SidebarProvider, SidebarTrigger } from './components/ui/sidebar'
 import { AppSidebar } from './components/app-sidebar'
-import {APIProvider , Map , Marker } from '@vis.gl/react-google-maps'
+import { APIProvider, Map, AdvancedMarker  , Marker} from '@vis.gl/react-google-maps'
 import './index.css'
-import data from "./api/mock.json"
-
-// Pages
+import AnalyzePage from './components/business/analyze'
 import HotelList from './components/business/complist'
-import AnalyzePage from './components/business/analyze' // <- create this component
+import { useHotelContext } from './context/Hotels'
+import { CustomAdvancedMarker, HotelAdvancedMarker } from './components/custom_marker/custom_marker'
 
 function App() {
-  const containerStyle = {
-    width: '80vw',
-    height: '750px'
-  };
-  
+  const { hotels } = useHotelContext()
+  const location = useLocation() // <-- get the current path
+
   const center = {
     lat: 35.2271, // Charlotte, NC
     lng: -80.8431
-  };
-  let hotelList = data["properties"]
-  console.log(hotelList)
-  
+  }
+
   return (
-    
     <SidebarProvider>
-      <div className='flex w-full'>
-      <AppSidebar />
-      <main className="flex flex-wrap w-full">
-        <SidebarTrigger />
+      <div className="relative h-screen w-screen overflow-hidden">
 
-        <Routes>
-          <Route
-            path="/"
-            element={
-              <div>
-                <h1 className="text-2xl font-bold text-center mt-4">Welcome to Innsight</h1>
-                <p className="text-center text-gray-600">Your one-stop solution for hotel bookings</p>
-                
-                  <Map
-                    style={containerStyle}
-                    defaultCenter={center}
-                    defaultZoom={12}
-                    gestureHandling={'greedy'}
-                    disableDefaultUI={false}
-                  >
-                    <Marker position={center} />
-                    {hotelList.map(hotel => (
-                    <Marker key={hotel.property_token} position={{ lat: hotel.gps_coordinates.latitude, lng: hotel.gps_coordinates.longitude }} />
-                  ))}
-
-                  </Map>
-                
-                <HotelList />
-              </div>
+        {/* Show map only on '/' route */}
+        {location.pathname === '/' && (
+          <Map
+            mapId='47a62328fcb304'
+            style={{
+              width: '100%',
+              height: '100%',
+              position: 'absolute',
+              zIndex: 0
+            }}
+            center={
+              hotels.length
+                ? {
+                    lat: hotels[0].gps_coordinates.latitude,
+                    lng: hotels[0].gps_coordinates.longitude
+                  }
+                : center
             }
-          />
-          <Route path="/analyze/:id" element={<AnalyzePage />} />
-        </Routes>
-      </main>
+            defaultZoom={14}
+            gestureHandling="greedy"
+            disableDefaultUI={false}
+          >
+            {hotels.map(hotel => (
+              <HotelAdvancedMarker
+                hotel={hotel}
+                key={hotel.property_token}
+              />
+            ))}
+          </Map>
+        )}
+
+        {/* Overlay UI Layer */}
+        <div className="relative z-10 w-full h-full pointer-events-none">
+          <div className="flex w-full h-full">
+            <div className="pointer-events-auto">
+              <AppSidebar />
+            </div>
+
+            <main className="flex flex-wrap w-full p-4">
+              <SidebarTrigger className="pointer-events-auto" />
+
+              <Routes>
+                <Route
+                  path="/"
+                  element={
+                    <>
+                      <div className="w-full h-full text-center">
+                        <h1 className="text-5xl font-bold text-black mt-4 drop-shadow-md">
+                          Welcome to Innsight
+                        </h1>
+                        <p className="text-black mb-4 drop-shadow-md">
+                          Your one-stop solution for hotel bookings
+                        </p>
+                      </div>
+
+                      {/* <div className="absolute bottom-0 left-0 right-0 z-20 rounded-t-2xl shadow-md max-h-[40%] overflow-y-auto pointer-events-auto">
+                        <HotelList hotels={hotels} />
+                      </div> */}
+                    </>
+                  }
+                />
+                <Route path="/analyze/:id" element={<AnalyzePage />} />
+              </Routes>
+            </main>
+          </div>
+        </div>
       </div>
     </SidebarProvider>
-    
   )
 }
 

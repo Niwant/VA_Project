@@ -3,7 +3,9 @@ import { toast } from "sonner"
 const API_KEY = '84a16e28171c959e8fbcb5b4d9f604f54b40b72c595199079e24f2f1002d0ead'
 import hotel_data from './mock.json'
 
-const handleSearch = async (data) => {
+
+
+const hotelSearch = async (data) => {
   if (!data.destination) {
     toast({ title: "Please enter a destination" })
     return
@@ -25,6 +27,7 @@ const handleSearch = async (data) => {
     })
 
     console.log("Hotels found:", response.data)
+    return response.data.properties
     // Show results in UI or route to a results page
   } catch (error) {
     console.error("Error fetching hotels:", error)
@@ -36,4 +39,5 @@ const handleSearch = async (data) => {
   }
 }
 
-export default {handleSearch}
+
+export default { hotelSearch}
