@@ -1,10 +1,46 @@
-import { createContext, useState, useContext } from 'react';
+// import { createContext, useState, useContext } from 'react';
 
-const HotelContext = createContext({});
+// const HotelContext = createContext({});
 
-export const HotelProvider = ({ children }) => {
-  const [hotels, setHotels] = useState([]);
-  const [selectedHotel, setSelectedHotel] = useState(null);
+// export const HotelProvider = ({ children }) => {
+//   const [hotels, setHotels] = useState([]);
+//   const [selectedHotel, setSelectedHotel] = useState(null);
+
+//   return (
+//     <HotelContext.Provider value={{ hotels, setHotels, selectedHotel, setSelectedHotel }}>
+//       {children}
+//     </HotelContext.Provider>
+//   );
+// };
+
+// export const useHotelContext = () => useContext(HotelContext);
+import { createContext, useState, useContext, ReactNode } from "react";
+
+// Define a minimal Hotel type (you can extend this later)
+interface Hotel {
+  property_token: string;
+  name: string;
+  gps_coordinates: {
+    latitude: number;
+    longitude: number;
+  };
+  [key: string]: any;
+}
+
+// Define context shape
+interface HotelContextType {
+  hotels: Hotel[];
+  setHotels: React.Dispatch<React.SetStateAction<Hotel[]>>;
+  selectedHotel: Hotel | null;
+  setSelectedHotel: React.Dispatch<React.SetStateAction<Hotel | null>>;
+}
+
+// Create the context with undefined as initial value
+const HotelContext = createContext<HotelContextType | undefined>(undefined);
+
+export const HotelProvider = ({ children }: { children: ReactNode }) => {
+  const [hotels, setHotels] = useState<Hotel[]>([]);
+  const [selectedHotel, setSelectedHotel] = useState<Hotel | null>(null);
 
   return (
     <HotelContext.Provider value={{ hotels, setHotels, selectedHotel, setSelectedHotel }}>
@@ -13,4 +49,10 @@ export const HotelProvider = ({ children }) => {
   );
 };
 
-export const useHotelContext = () => useContext(HotelContext);
+export const useHotelContext = () => {
+  const context = useContext(HotelContext);
+  if (!context) {
+    throw new Error("useHotelContext must be used within a HotelProvider");
+  }
+  return context;
+};

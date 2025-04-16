@@ -15,7 +15,7 @@ import {
   SelectContent,
   SelectItem,
 } from "../components/ui/select";
-import { Checkbox } from "../components/ui/checkbox";
+import { Checkbox } from "../components/ui/Checkbox";
 import HotelsAPi from "../api/hotelsApi";
 import { useHotelContext } from "../context/Hotels";
 
@@ -204,7 +204,7 @@ export function AppSidebar({ onSearchResult }) {
               </div>
 
               {/* Sort By */}
-              <div>
+              {/* <div>
                 <Label>Sort By</Label>
                 <Select value={sortBy} onValueChange={setSortBy}>
                   <SelectTrigger className="mt-1">
@@ -216,7 +216,7 @@ export function AppSidebar({ onSearchResult }) {
                     <SelectItem value="13">Most reviewed</SelectItem>
                   </SelectContent>
                 </Select>
-              </div>
+              </div> */}
 
               {/* Rating */}
               <div>
