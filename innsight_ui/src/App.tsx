@@ -7,9 +7,12 @@ import AnalyzePage from './components/business/analyze'
 import HotelList from './components/business/complist'
 import { useHotelContext } from './context/Hotels'
 import { CustomAdvancedMarker, HotelAdvancedMarker } from './components/custom_marker/custom_marker'
+import { HotelDrawer } from './components/hotel_drawer'
+import { useState } from 'react'
 
 function App() {
   const { hotels } = useHotelContext()
+  const [selectedHotel, setSelectedHotel] = useState(null)
   const location = useLocation() // <-- get the current path
 
   const center = {
@@ -22,6 +25,7 @@ function App() {
       <div className="relative h-screen w-screen overflow-hidden">
 
         {/* Show map only on '/' route */}
+        
         {location.pathname === '/' && (
           <Map
             mapId='47a62328fcb304'
@@ -45,6 +49,7 @@ function App() {
           >
             {hotels.map(hotel => (
               <HotelAdvancedMarker
+                setSelectedHotel={setSelectedHotel}
                 hotel={hotel}
                 key={hotel.property_token}
               />
@@ -57,17 +62,25 @@ function App() {
           <div className="flex w-full h-full">
             <div className="pointer-events-auto">
               <AppSidebar />
+              
             </div>
 
             <main className="flex flex-wrap w-full p-4">
               <SidebarTrigger className="pointer-events-auto" />
-
+              {selectedHotel && (
+                <HotelDrawer
+                  hotel={selectedHotel}
+                  onClose={() => setSelectedHotel(null)}
+                />
+              )}
+              
+              {/* Main content area */}
               <Routes>
                 <Route
                   path="/"
                   element={
                     <>
-                      <div className="w-full h-full text-center">
+                      <div className="w-full h-full text-center poiner-events-auto">
                         <h1 className="text-5xl font-bold text-black mt-4 drop-shadow-md">
                           Welcome to Innsight
                         </h1>
@@ -75,7 +88,7 @@ function App() {
                           Your one-stop solution for hotel bookings
                         </p>
                       </div>
-
+                      
                       {/* <div className="absolute bottom-0 left-0 right-0 z-20 rounded-t-2xl shadow-md max-h-[40%] overflow-y-auto pointer-events-auto">
                         <HotelList hotels={hotels} />
                       </div> */}

@@ -3,6 +3,9 @@ import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/componen
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
+import hotel_summarize from "@/api/aiAPi";
+import { useNavigate } from "react-router-dom";
+import { HotelDrawer } from "../hotel_drawer";
 
 interface Hotel {
   name: string;
@@ -18,9 +21,9 @@ interface Hotel {
   gps_coordinates: { latitude: number; longitude: number };
 }
 
-export const HotelAdvancedMarker = ({ hotel }: { hotel: Hotel }) => {
+export const HotelAdvancedMarker = ({ hotel , setSelectedHotel }: { hotel: Hotel }) => {
   const [clicked, setClicked] = useState(false);
-
+  const navigate = useNavigate();
   const position = {
     lat: hotel.gps_coordinates.latitude,
     lng: hotel.gps_coordinates.longitude
@@ -67,22 +70,25 @@ export const HotelAdvancedMarker = ({ hotel }: { hotel: Hotel }) => {
                 <Button
                   size="sm"
                   variant="outline"
+                  id="analyze-button"
                   onClick={() => {
-                    // Navigate to the analyze page with the hotel ID
-                    window.location.href = `/analyze/${hotel.property_token}`;
+                    setSelectedHotel(hotel);
+                    
                   }}
                   >
-                    Analyze
+                   Hotel Info
                   </Button>
+                  <HotelDrawer modal={false}/>
                   <Button
                     size="sm"
                     variant="outline"
+                    id="details-button"
                     onClick={() => {
                       // Navigate to the hotel details page with the hotel ID
-                      window.location.href = `/hotel/${hotel.property_token}`;
+                      navigate( `/analyze/${hotel.property_token}`);
                     }}
                     >
-                    View Details
+                     Hotel Analysis
                     </Button>
               </CardFooter>
             </div>
