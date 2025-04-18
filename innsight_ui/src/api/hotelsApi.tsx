@@ -3,7 +3,7 @@ import axios from "axios";
 import { toast } from "sonner";
 import hotel_data from "./mock.json";
 
-const API_KEY = "84a16e28171c959e8fbcb5b4d9f604f54b40b72c595199079e24f2f1002d0ead";
+const API_KEY = "b7ac4bc4468c8208fa6899b52b919495e0c3061303b29de34f5a42208844a77e";//changed api key
 
 const hotelSearch = async (data: any) => {
   if (!data.destination || data.destination.trim() === "") {
