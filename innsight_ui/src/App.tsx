@@ -183,7 +183,7 @@ function App() {
                   path="/"
                   element={
                     <>
-                      <div className="w-full h-full text-center pointer-events-auto">
+                      <div className="w-full h-full text-center poiter-events-auto">
                         <h1 className="text-5xl font-bold text-black mt-4 drop-shadow-md">
                           Welcome to Innsight
                         </h1>

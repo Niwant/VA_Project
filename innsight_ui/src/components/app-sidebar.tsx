@@ -93,6 +93,7 @@ export function AppSidebar({ onSearchResult }) {
   };
 
   const handleSearchClick = async () => {
+    console.log("Search clicked");
     const payload = {
       destination,
       checkIn,

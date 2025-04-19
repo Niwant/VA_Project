@@ -76,7 +76,30 @@ function formatDate(date: any) {
   return new Date(date).toISOString().split("T")[0];
 }
 
-export default { hotelSearch };
+const fetchNearbyEvents = async (payload: any) => {
+  const params = new URLSearchParams({
+    engine: "google_events",
+    q: `events near ${payload.location}`,
+    hl: "en",
+    gl: "us",
+    api_key: API_KEY, // or use .env securely
+  });
+
+  const res = await fetch(`/api/search.json?${params.toString()}`);
+  const data = await res.json();
+
+  // Optional: Filter events by start-end date
+  const filteredEvents = data.events_results?.filter((event) => {
+    const eventDate = dayjs(event.date?.start_date || event.date?.when);
+    return eventDate.isAfter(start) && eventDate.isBefore(end);
+  });
+
+  return filteredEvents || [];
+};
+
+
+export default { hotelSearch , fetchNearbyEvents };
+
 // import axios from "axios";
 // import { toast } from "sonner";
 // import hotel_data from "./mock.json";
