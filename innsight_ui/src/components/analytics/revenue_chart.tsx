@@ -9,8 +9,10 @@ import {
     Legend,
   } from "chart.js"
   import { Line } from "react-chartjs-2"
-  import { useMemo } from "react"
-  
+  import { use, useMemo } from "react"
+  import aiAPi from "@/api/aiAPi"
+  import { useEffect, useState } from "react"
+
   // Register Chart.js components
   ChartJS.register(
     CategoryScale,
@@ -23,7 +25,7 @@ import {
   )
   
   // Mock data – replace with props or API later
-  const data = [
+ /*  const data = [
     { month: "Jan", revenue: 46774 },
     { month: "Feb", revenue: 17947 },
     { month: "Mar", revenue: 39388 },
@@ -36,22 +38,39 @@ import {
     { month: "Oct", revenue: 45110 },
     { month: "Nov", revenue: 37492 },
     { month: "Dec", revenue: 49204 },
-  ]
+  ] */
   
   export default function RevenueChart() {
+    const [data, setData] = useState([])
+ 
+    useEffect(() => {
+      fetchInquiryData()
+    }, [])
+  
+    const fetchInquiryData = async () => {
+      try { 
+        const response = await aiAPi.revenue()
+        console.log("Revenue data:", response)
+        // Assuming the response is in the format [{ month: "Jan", revenue: 352 }, ...]
+        setData(response)
+      } catch (error) {
+        console.error("Error fetching revenue data:", error)
+      }
+    }
+  
     const chartData = useMemo(() => ({
-      labels: data.map((d) => d.month),
+      labels:  Object.keys(data),
       datasets: [
         {
           label: "Revenue",
-          data: data.map((d) => d.revenue),
+          data:  Object.values(data),
           borderColor: "rgb(59, 130, 246)", // Tailwind blue-500
           backgroundColor: "rgba(59, 130, 246, 0.2)",
           tension: 0.3,
           fill: true,
         },
       ],
-    }), [])
+    }), [data])
   
     const options = {
       responsive: true,

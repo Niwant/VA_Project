@@ -1,8 +1,11 @@
 # VA_Project
 
-This repo is for VA VA_Project
+This repo is the code base for InnSight.
 
 ---
+
+## App Deployment URL
+
 
 ### **1. For Consumers: Best Hotels & Area Visualizations**
 
@@ -72,4 +75,4 @@ These visualizations help hotel owners analyze their competitors and explore pot
 
 - **Frontend**: Display these visualizations in an interactive web dashboard (React + D3.js / Chart.js).
 - **Backend**: Use **Python (Flask/Django) with Folium, Plotly, Matplotlib, and NLP (for sentiment analysis).**
-- **Data Sources**: Combine hotel reviews with **real-time pricing from APIs (e.g., Booking.com, Google Places).**
+- **Data Sources**: Combine hotel reviews with **real-time pricing from APIs (e.g., Google Hotels, Google Events, Google Places).**

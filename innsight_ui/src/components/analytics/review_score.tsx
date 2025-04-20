@@ -9,8 +9,10 @@ import {
     Legend,
   } from "chart.js"
   import { Line } from "react-chartjs-2"
-  import { useMemo } from "react"
-  
+  import { use, useMemo } from "react"
+  import { useEffect, useState } from "react"
+  import aiAPi from "@/api/aiAPi"
+
   ChartJS.register(
     CategoryScale,
     LinearScale,
@@ -22,7 +24,7 @@ import {
   )
   
   // Mock review data
-  const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
+  /* const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
   
   const averageRatings = [4.2, 4.4, 4.5, 4.1, 4.6, 4.3, 4.7, 4.8, 4.5, 4.4, 4.2, 4.6]
   const samplePoints = [ // optional: individual reviews or outliers
@@ -32,15 +34,31 @@ import {
     { x: "May", y: 5.0 },
     { x: "Jul", y: 4.9 },
   ]
-  
+   */
   export default function ReviewScoreChart() {
+    const [data, setData] = useState([])
+ 
+   useEffect(() => {
+     fetchInquiryData()
+   }, [])
+ 
+   const fetchInquiryData = async () => {
+     try {
+       const response = await aiAPi.review_score
+       console.log("Review Score data:", response)
+       // Assuming the response is in the format [{ month: "Jan", review_score: 352 }, ...]
+       setData(response)
+     } catch (error) {
+       console.error("Error fetching inquiry data:", error)
+     }
+   }
     const chartData = useMemo(() => ({
-      labels: months,
+      labels: Object.keys(data),
       datasets: [
         {
           type: "line",
           label: "Avg. Review Score",
-          data: averageRatings,
+          data: Object.values(data),
           borderColor: "rgb(59, 130, 246)",
           backgroundColor: "rgba(59, 130, 246, 0.2)",
           tension: 0.3,
@@ -55,7 +73,7 @@ import {
           pointRadius: 6,
         },
       ],
-    }), [])
+    }), [data])
   
     const options = {
       responsive: true,

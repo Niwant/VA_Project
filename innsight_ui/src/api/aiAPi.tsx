@@ -86,5 +86,25 @@ console.log(result);
 return result;
 }
 
+async function review_score() {
+  const completion = await groq.chat.completions
+    .create({
+      messages: [
+        {
+          role: "user",
+          content: "You are helping me with my hotel business project. I will provide you with the location, luxury rating and room size for the hotel. You need to help me get data for the rating of the hotel month-wise. Give me rating from 0.0 to 5.0. I want it in json format, with no additional textual content \n Location: Las Vegas \n Luxury: 3 star hotel \n Rooms: 2-6 people rooms",
+        },
+      ],
+      model: "llama-3.3-70b-versatile",
+    })
+  const response = completion.choices[0].message.content;
+  const cleaned = response.replace(/```json|```/g, '').trim();
 
-export default {hotel_summarize, occupancy_chart, inquiry, revenue};
+// Step 2: Parse JSON
+const result = JSON.parse(cleaned);
+
+console.log(result);
+return result;
+}
+
+export default {hotel_summarize, occupancy_chart, inquiry, revenue, review_score};
