@@ -82,8 +82,8 @@ async function inquiry() {
 // Step 2: Parse JSON
 const result = JSON.parse(cleaned);
 
-console.log(result.name);
-return result.name;
+console.log(result);
+return result;
 }
 
 

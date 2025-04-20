@@ -8,8 +8,9 @@ import {
   Legend,
 } from "chart.js"
 import { Bar } from "react-chartjs-2"
-import { useMemo } from "react"
+import { use, useMemo } from "react"
 import aiApi from "@/api/aiAPi"
+import { useEffect, useState } from "react"
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend)
 
@@ -27,20 +28,36 @@ ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend)
   { month: "Nov", inquiries: 216 },
   { month: "Dec", inquiries: 288 },
 ] */
-  const data = aiApi.inquiry();
 
 export default function InquiryChart() {
+  const [data, setData] = useState([])
+
+  useEffect(() => {
+    fetchInquiryData()
+  }, [])
+
+  const fetchInquiryData = async () => {
+    try {
+      const response = await aiApi.inquiry()
+      console.log("Inquiry data:", response)
+      // Assuming the response is in the format [{ month: "Jan", inquiries: 352 }, ...]
+      setData(response)
+    } catch (error) {
+      console.error("Error fetching inquiry data:", error)
+    }
+  }
+
   const chartData = useMemo(() => ({
-    labels: data.map((d) => d.month),
+    labels: Object.keys(data),
     datasets: [
       {
         label: "Inquiries",
-        data: data.map((d) => d.inquiries),
+        data: Object.values(data),
         backgroundColor: "rgba(16, 185, 129, 0.6)", // Tailwind green-500
         borderRadius: 4,
       },
     ],
-  }), [])
+  }), [data])
 
   const options = {
     responsive: true,
