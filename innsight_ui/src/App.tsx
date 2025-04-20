@@ -116,11 +116,13 @@ import { useHotelContext } from './context/Hotels';
 import { HotelAdvancedMarker } from './components/custom_marker/custom_marker';
 import { HotelDrawer } from './components/hotel_drawer';
 import { useState } from 'react';
+import EventSheet from './components/events/events';
 
 function App() {
-  const { hotels = [] } = useHotelContext(); // ✅ fallback to empty array
+  const { hotels = [] , events} = useHotelContext(); // ✅ fallback to empty array
   const [selectedHotel, setSelectedHotel] = useState(null);
   const location = useLocation();
+  
 
   const center = {
     lat: 35.2271, // Charlotte, NC
@@ -198,6 +200,15 @@ function App() {
                           <HotelList hotels={hotels} />
                         </div>
                       )} */}
+                      <div className='pointer-events-auto'>
+                      <EventSheet
+                        events={events || []}
+                        destination={
+                          selectedHotel
+                            ? `${selectedHotel.name} (${selectedHotel.gps_coordinates.latitude}, ${selectedHotel.gps_coordinates.longitude})`
+                            : 'Charlotte, NC'
+                        }/>
+                        </div>
                     </>
                   }
                 />

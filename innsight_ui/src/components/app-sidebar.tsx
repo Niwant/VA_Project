@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { format } from "date-fns";
+import { format, set } from "date-fns";
 import { MapPin, CalendarIcon, Search } from "lucide-react";
 
 import { Input } from "../components/ui/input";
@@ -72,7 +72,7 @@ export function AppSidebar({ onSearchResult }) {
   const [propertyTypes, setPropertyTypes] = useState<number[]>([]);
   const [amenitiesSelected, setAmenitiesSelected] = useState<number[]>([]);
   const [hotelClass, setHotelClass] = useState<number[]>([]);
-  const { setHotels } = useHotelContext();
+  const { setHotels , setEvents } = useHotelContext();
 
   const handlePropertyChange = (id: number, checked: boolean) => {
     setPropertyTypes((prev) =>
@@ -112,7 +112,10 @@ export function AppSidebar({ onSearchResult }) {
     if (results && onSearchResult) {
       onSearchResult(results);
     }
+    const events = await HotelsAPi.fetchNearbyEvents(payload);
+    console.log("Nearby events:", events);
     setHotels(results);
+    setEvents(events);
   };
 
   return (

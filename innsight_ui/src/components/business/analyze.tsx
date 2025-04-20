@@ -31,7 +31,8 @@ export default function AnalyzePage() {
 
   const Summarize = async () => {
     console.log("Summarizing...");
-    const summary = await hotel_summarize();
+    const summary = await hotel_summarize.hotel_summarize();
+
     setSummary(summary);
   };
 

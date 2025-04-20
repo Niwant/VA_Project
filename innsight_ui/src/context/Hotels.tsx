@@ -33,6 +33,8 @@ interface HotelContextType {
   setHotels: React.Dispatch<React.SetStateAction<Hotel[]>>;
   selectedHotel: Hotel | null;
   setSelectedHotel: React.Dispatch<React.SetStateAction<Hotel | null>>;
+  events?: any;
+  setEvents?: React.Dispatch<React.SetStateAction<any>>;
 }
 
 // Create the context with undefined as initial value
@@ -41,9 +43,10 @@ const HotelContext = createContext<HotelContextType | undefined>(undefined);
 export const HotelProvider = ({ children }: { children: ReactNode }) => {
   const [hotels, setHotels] = useState<Hotel[]>([]);
   const [selectedHotel, setSelectedHotel] = useState<Hotel | null>(null);
+  const [events, setEvents] = useState<any>([]); // Optional: Add event state if needed
 
   return (
-    <HotelContext.Provider value={{ hotels, setHotels, selectedHotel, setSelectedHotel }}>
+    <HotelContext.Provider value={{ hotels, setHotels, selectedHotel, setSelectedHotel , events, setEvents }}>
       {children}
     </HotelContext.Provider>
   );

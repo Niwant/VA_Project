@@ -38,7 +38,7 @@ const hotelSearch = async (data: any) => {
   if (data.rating?.trim()) payload.rating = data.rating.trim();
   if (data.hotel_class?.trim()) payload.hotel_class = data.hotel_class.trim();
 
-  console.log("🔍 Sending hotel search request with:", payload);
+  // console.log("🔍 Sending hotel search request with:", payload);
 
   try {
     const response = await axios.get("/api/search.json", { params: payload });
@@ -56,7 +56,7 @@ const hotelSearch = async (data: any) => {
       return hotel_data.properties;
     }
 
-    console.log("✅ Hotels found:", response.data);
+    // console.log("✅ Hotels found:", response.data);
     return response.data.properties;
   } catch (error) {
     console.error("❌ Error fetching hotels:", error);
@@ -66,7 +66,7 @@ const hotelSearch = async (data: any) => {
       variant: "destructive",
     });
 
-    console.log("📦 Using local mock data instead:");
+    // console.log("📦 Using local mock data instead:");
     return hotel_data.properties;
   }
 };
@@ -79,7 +79,7 @@ function formatDate(date: any) {
 const fetchNearbyEvents = async (payload: any) => {
   const params = new URLSearchParams({
     engine: "google_events",
-    q: `events near ${payload.location}`,
+    q: `events near ${payload.destination}`,
     hl: "en",
     gl: "us",
     api_key: API_KEY, // or use .env securely
@@ -88,11 +88,12 @@ const fetchNearbyEvents = async (payload: any) => {
   const res = await fetch(`/api/search.json?${params.toString()}`);
   const data = await res.json();
 
-  // Optional: Filter events by start-end date
-  const filteredEvents = data.events_results?.filter((event) => {
-    const eventDate = dayjs(event.date?.start_date || event.date?.when);
-    return eventDate.isAfter(start) && eventDate.isBefore(end);
-  });
+  return data.events_results || [];
+  // // Optional: Filter events by start-end date
+  // const filteredEvents = data.events_results?.filter((event) => {
+  //   const eventDate = dayjs(event.date?.start_date || event.date?.when);
+  //   return eventDate.isAfter(start) && eventDate.isBefore(end);
+  // });
 
   return filteredEvents || [];
 };

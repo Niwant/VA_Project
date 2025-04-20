@@ -27,6 +27,9 @@ import {
   ArcElement,
 } from "chart.js";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import PriceChart from "./analytics/price_chart";
+import RatingsChart from "./analytics/rating_chart";
+import PriceComparisonChart from "./analytics/price_comparison_chart";
 
 ChartJS.register(
   BarElement,
@@ -40,7 +43,7 @@ ChartJS.register(
 
 export function HotelDrawer({ hotel, onClose }: any) {
   if (!hotel) return null;
-
+  console.log("Hotel data:", hotel);
   const rateChart = {
     labels: ["Before Taxes", "After Taxes"],
     datasets: [
@@ -99,7 +102,7 @@ export function HotelDrawer({ hotel, onClose }: any) {
 
   return (
     <Drawer open={!!hotel} onOpenChange={(open) => !open && onClose()}>
-      <DrawerContent className="h-[85vh] overflow-y-auto rounded-t-2xl px-4 pt-4">
+      <DrawerContent className="h-[80vh] overflow-y-auto rounded-t-2xl px-4 pt-4">
         <DrawerHeader className="flex items-start justify-between">
           <div>
             <DrawerTitle>{hotel?.name}</DrawerTitle>
@@ -115,7 +118,7 @@ export function HotelDrawer({ hotel, onClose }: any) {
           </Button>
         </DrawerHeader>
 
-        <ScrollArea className="h-[calc(80vh-6rem)] pr-4 space-y-6">
+        <ScrollArea className="h-[calc(70vh-6rem)] pr-4 space-y-6">
           <blockquote className="italic text-sm text-muted-foreground border-l-4 pl-4 border-gray-300">
             “{quote}”
           </blockquote>
@@ -214,6 +217,26 @@ export function HotelDrawer({ hotel, onClose }: any) {
                 </CardContent>
               </Card>
             )}
+
+            {hotel?.reviews_breakdown?.length > 0 && (
+              <Card>
+                <CardHeader>
+                  <CardTitle className="text-base">Ratings Breakdown</CardTitle>
+                </CardHeader>
+                <CardContent className="h-[200px]">
+                  <RatingsChart data={hotel?.ratings} />
+                </CardContent>
+              </Card>
+            )}
+
+            <Card>
+              <CardHeader>
+                <CardTitle className="text-base">Price Comparison Chart</CardTitle>
+              </CardHeader>
+              <CardContent className="h-[200px]">
+                <PriceComparisonChart hotel={hotel} />
+              </CardContent>
+            </Card>
           </div>
 
           <div>

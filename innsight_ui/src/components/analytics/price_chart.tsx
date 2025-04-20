@@ -31,6 +31,8 @@ import {
   export default function PriceChart() {
     const [mode, setMode] = useState("guests")
   
+    
+
     const chartData = useMemo(() => {
       const source =
         mode === "guests" ? data.pricesByGuests : data.pricesByRoomType
