@@ -5,7 +5,21 @@ This repo is the code base for InnSight.
 ---
 
 ## App Deployment URL
+The app will be deployed at
+http://localhost:5173/
 
+## To Deploy the app
+1. Clone the repository (main branch)
+    for HTTP: git clone https://github.com/Niwant/VA_Project.git
+    for SSH: git clone git@github.com:Niwant/VA_Project.git
+2. cd innsight_ui
+3. npm install
+4. npm run dev
+
+Open the Deployment URL to explore the app.
+
+Note:
+While exploring the app, please use checkin and checkout dates that are not <today's> date. Additionally please dont leave the minimum price empty, as these are some of the code quality tests we have implemented to ensure smooth running of the code.
 
 ### **1. For Consumers: Best Hotels & Area Visualizations**
 
