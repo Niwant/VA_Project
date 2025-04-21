@@ -9,19 +9,24 @@ async function hotel_summarize(data) {
       messages: [
         {
           role: "user",
-          content: "You are now a hotel business helper , I will give you some features such as how I am planning to make my hotel and location you will give me estimated analytics and 3 hotels similar in the nearby location I want everything in json format \n Hotel Location: Las Vegas \n Luxury: 3 star hotel \n Rooms: 2-8 people rooms\n Modern Architecutre , swimming pool , garden , massage , gym , 24*7 buffet ",
+          content: `
+        You are an AI operations advisor. Given the hotel location, luxury level, and review score, give me a textual summary for the hotel, as something that would attract a consumer to the hotel.**.
+        
+        ### Instructions:
+        - Return text data only, with no additional headers or tails.
+        - Keep the summary short and give it in markdown format
+
+        ### Input Data:
+        ${JSON.stringify(data)}
+          `.trim()
         },
       ],
       model: "llama-3.3-70b-versatile",
     })
   const response = completion.choices[0].message.content;
-  const cleaned = response.replace(/```json|```/g, '').trim();
 
-// Step 2: Parse JSON
-const result = JSON.parse(cleaned);
-
-console.log(result.name);
-return result.name;
+console.log(response);
+return response;
 }
 
 async function occupancy_chart(data) {

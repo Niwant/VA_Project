@@ -12,9 +12,10 @@ import InquiryChart from "../analytics/inquiry_chart";
 import OccupancyChart from "../analytics/occupancy_chart";
 import ReviewScoreChart from "../analytics/review_score";
 import { Button } from "@/components/ui/button";
-import hotel_summarize from "@/api/aiAPi";
+import aiAPi from "@/api/aiAPi.js";
 import React from "react";
 import { useParams } from "react-router-dom";
+import ReactMarkdown from "react-markdown";
 
 // Placeholder charts
 import PriceComparisonChart from "../analytics/price_comparison_chart.jsx";
@@ -31,7 +32,7 @@ export default function AnalyzePage() {
 
   const Summarize = async () => {
     console.log("Summarizing...");
-    const summary = await hotel_summarize.hotel_summarize();
+    const summary = await aiAPi.hotel_summarize(hotel);
 
     setSummary(summary);
   };
@@ -68,7 +69,7 @@ export default function AnalyzePage() {
         </Button>
         {summary && (
           <div className="text-sm text-muted-foreground">
-            <p>{summary}</p>
+            <ReactMarkdown>{summary}</ReactMarkdown>
           </div>
         )}
       </div>

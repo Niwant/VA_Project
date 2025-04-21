@@ -13,6 +13,7 @@ import {
   CardContent,
 } from "@/components/ui/card";
 
+import aiAPi from "@/api/aiAPi";
 import { Button } from "@/components/ui/button";
 import { X } from "lucide-react";
 import { Bar, PolarArea } from "react-chartjs-2";
@@ -30,7 +31,8 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import PriceChart from "./analytics/price_chart";
 import RatingsChart from "./analytics/rating_chart";
 import PriceComparisonChart from "./analytics/price_comparison_chart";
-
+import { useState, useEffect } from "react";
+import ReactMarkdown from "react-markdown";
 ChartJS.register(
   BarElement,
   CategoryScale,
@@ -42,6 +44,17 @@ ChartJS.register(
 );
 
 export function HotelDrawer({ hotel, onClose }: any) {
+  const [summary, setSummary] = useState("");
+  
+  useEffect(()=>{
+    Summarize();
+  },[])
+  const Summarize = async () => {
+    console.log("Summarizing...");
+    const summary = await aiAPi.hotel_summarize(hotel);
+
+    setSummary(summary);
+  };
   if (!hotel) return null;
   console.log("Hotel data:", hotel);
   const rateChart = {
@@ -99,6 +112,8 @@ export function HotelDrawer({ hotel, onClose }: any) {
   const cons = ["Bathrooms could be improved", "Breakfast quality is inconsistent"];
   const quote =
     "If you love boutique stays with creative flair and plan to explore central Paris on foot — this one’s a gem.";
+  
+   
 
   return (
     <Drawer open={!!hotel} onOpenChange={(open) => !open && onClose()}>
@@ -129,20 +144,11 @@ export function HotelDrawer({ hotel, onClose }: any) {
             </CardHeader>
             <CardContent className="grid grid-cols-2 text-sm gap-2">
               <div>
-                <h4 className="font-semibold text-green-700 mb-1">Pros</h4>
-                <ul className="list-disc list-inside space-y-1">
-                  {pros.map((item, idx) => (
-                    <li key={idx}>{item}</li>
-                  ))}
-                </ul>
-              </div>
-              <div>
-                <h4 className="font-semibold text-red-700 mb-1">Cons</h4>
-                <ul className="list-disc list-inside space-y-1">
-                  {cons.map((item, idx) => (
-                    <li key={idx}>{item}</li>
-                  ))}
-                </ul>
+                {summary && (
+                          <div className="text-sm text-muted-foreground">
+                            <ReactMarkdown>{summary}</ReactMarkdown>
+                          </div>
+                        )}
               </div>
             </CardContent>
           </Card>
