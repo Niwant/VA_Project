@@ -18,6 +18,7 @@ Chart.register(CategoryScale, LinearScale, BarElement, Tooltip, Legend);
 export default function PriceComparisonChart(props) {
   const [data, setData] = useState(null);
   const { hotels } = useHotelContext();
+  const {reviewData,setReviewData} = useHotelContext();
   
   useEffect(() => {
     fetchData();
@@ -28,6 +29,7 @@ export default function PriceComparisonChart(props) {
      const response = await aiAPI.hotel_price_comparison(hotels ,props.hotel );
       console.log(response);
       setData(response);
+      setReviewData({...reviewData, price_comparison: response });
   }
 
 
@@ -48,7 +50,7 @@ export default function PriceComparisonChart(props) {
     return {
       labels: data.labels,
       datasets: data.datasets.map((dataset) => ({
-        
+
         ...dataset,
         // Ensure consistent formatting and a fallback background color if missing
         backgroundColor: dataset.backgroundColor || "rgba(75, 192, 192, 0.6)",
@@ -59,6 +61,7 @@ export default function PriceComparisonChart(props) {
 
   const options = {
     responsive: true,
+    indexAxis: "y",
     plugins: {
       legend: {
         position: "top",

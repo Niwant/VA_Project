@@ -8,6 +8,7 @@ import {
   Legend
 } from 'chart.js'
 
+
 ChartJS.register(CategoryScale, LinearScale, BarElement, Tooltip, Legend)
 
 export default function RatingsChart({ data }) {

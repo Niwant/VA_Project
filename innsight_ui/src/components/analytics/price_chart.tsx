@@ -13,26 +13,28 @@ import {
   import { Card } from "@/components/ui/card"
   import aiAPi from "@/api/aiAPi"
   import { useEffect } from "react"
+  import { useHotelContext } from "@/context/Hotels"
   
   ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend)
   
-  const data = {
-    labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun"],
-    pricesByGuests: {
-      "2 Guests": [120, 125, 130, 135, 128, 132],
-      "4 Guests": [160, 165, 170, 180, 168, 175],
-      "6 Guests": [200, 210, 220, 230, 215, 225],
-    },
-    pricesByRoomType: {
-      Standard: [100, 110, 105, 108, 112, 115],
-      Deluxe: [140, 145, 150, 148, 155, 160],
-      Suite: [190, 195, 205, 210, 218, 225],
-    },
-  }
+  // const data = {
+  //   labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun"],
+  //   pricesByGuests: {
+  //     "2 Guests": [120, 125, 130, 135, 128, 132],
+  //     "4 Guests": [160, 165, 170, 180, 168, 175],
+  //     "6 Guests": [200, 210, 220, 230, 215, 225],
+  //   },
+  //   pricesByRoomType: {
+  //     Standard: [100, 110, 105, 108, 112, 115],
+  //     Deluxe: [140, 145, 150, 148, 155, 160],
+  //     Suite: [190, 195, 205, 210, 218, 225],
+  //   },
+  // }
   
   export default function PriceChart(props) {
     const [mode, setMode] = useState("guests")
     const [data, setData] = useState({})
+    const { reviewData, setReviewData } = useHotelContext()
   
     useEffect(() => {
       fetchInquiryData()
@@ -41,6 +43,8 @@ import {
       const response = await aiAPi.price_by_rooms(props.hotel)
       console.log("Price data:", response)
       setData(response)
+      setReviewData({ price: response, ...reviewData })
+
     }
 
 

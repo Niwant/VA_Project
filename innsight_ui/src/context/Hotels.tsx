@@ -44,9 +44,10 @@ export const HotelProvider = ({ children }: { children: ReactNode }) => {
   const [hotels, setHotels] = useState<Hotel[]>([]);
   const [selectedHotel, setSelectedHotel] = useState<Hotel | null>(null);
   const [events, setEvents] = useState<any>([]); // Optional: Add event state if needed
+  const [reviewData , setReviewData] = useState<any>([]); // Optional: Add review data state if needed
 
   return (
-    <HotelContext.Provider value={{ hotels, setHotels, selectedHotel, setSelectedHotel , events, setEvents }}>
+    <HotelContext.Provider value={{ hotels, setHotels, selectedHotel, setSelectedHotel , events, setEvents , reviewData , setReviewData }}>
       {children}
     </HotelContext.Provider>
   );

@@ -21,12 +21,16 @@ import ReactMarkdown from "react-markdown";
 import PriceComparisonChart from "../analytics/price_comparison_chart.jsx";
 import SentimentComparisonChart from "../analytics/sentiment_comparison_chart.jsx";
 import { useHotelContext } from "@/context/Hotels.js";
+import HotelSummarySheet from "./hotel_summary_sheet.js";
+
 
 export default function AnalyzePage() {
+  const [openSummary, setOpenSummary] = React.useState(false);
+  const [summaryMarkdown, setSummaryMarkdown] = React.useState("");
   const [summary, setSummary] = React.useState<string>("");
-  const [events, setEvents] = React.useState<string[]>([]);
+  const [eventSummary, setEventSummary] = React.useState<string>("");
   const {id} = useParams();
-  const {hotels } = useHotelContext();
+  const {hotels , events} = useHotelContext();
   const hotel = hotels.find((hotel) => hotel.property_token === id)
   console.log("Hotel:", hotel);
 
@@ -39,19 +43,18 @@ export default function AnalyzePage() {
 
   
 
-  const fetchNearbyEvents = async () => {
-    // You’ll replace this with real SerpAPI call
-    const mockedEvents = [
-      "🎉 Local Food Fest – Expected footfall spike",
-      "🎸 Jazz Concert – Booking surge predicted",
-      "🏀 Regional Basketball Finals – High traveler volume",
-    ];
-    setEvents(mockedEvents);
+  const fetchEventreccommendations = async () => {
+    try {
+      const response = await aiAPi.events_review(hotel , events);
+      console.log("Event recommendations:", response);
+      setEventSummary(response);
+    } catch (error) {
+      console.error("Error fetching event recommendations:", error);
+    }
   };
 
   React.useEffect(() => {
-    fetchNearbyEvents();
-   
+   fetchEventreccommendations();
   }, []);
 
   return (
@@ -64,14 +67,15 @@ export default function AnalyzePage() {
       </div>
 
       <div className="flex items-center">
-        <Button className="mr-4" onClick={Summarize}>
-          <span className="text-sm">Summarize</span>
-        </Button>
-        {summary && (
-          <div className="text-sm text-muted-foreground">
-            <ReactMarkdown>{summary}</ReactMarkdown>
-          </div>
-        )}
+      <Button onClick={() => setOpenSummary(true)}>View Summary</Button>
+
+      <HotelSummarySheet
+        open={openSummary}
+        onOpenChange={setOpenSummary}
+        markdown={summaryMarkdown}
+        setSummaryMarkdown={setSummaryMarkdown}
+        hotel={hotel}
+      />
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -133,11 +137,7 @@ export default function AnalyzePage() {
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <ul className="list-disc ml-5 text-sm text-muted-foreground space-y-1">
-              {events.map((event, idx) => (
-                <li key={idx}>{event}</li>
-              ))}
-            </ul>
+            <ReactMarkdown children={eventSummary}/>
           </CardContent>
         </Card>
 

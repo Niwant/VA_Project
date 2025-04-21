@@ -11,6 +11,7 @@ import { Bar } from "react-chartjs-2"
 import { use, useMemo } from "react"
 import aiApi from "@/api/aiAPi"
 import { useEffect, useState } from "react"
+import { useHotelContext } from "@/context/Hotels"
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend)
 
@@ -31,6 +32,7 @@ ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend)
 
 export default function InquiryChart(props) {
   const [data, setData] = useState([])
+  const{reviewData, setReviewData} = useHotelContext()
 
   useEffect(() => {
     fetchInquiryData()
@@ -42,6 +44,8 @@ export default function InquiryChart(props) {
       console.log("Inquiry data:", response)
       // Assuming the response is in the format [{ month: "Jan", inquiries: 352 }, ...]
       setData(response)
+      setReviewData({inquiry: response , ...reviewData})
+
     } catch (error) {
       console.error("Error fetching inquiry data:", error)
     }

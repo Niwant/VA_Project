@@ -12,6 +12,7 @@ import {
   import { use, useMemo } from "react"
   import { useEffect, useState } from "react"
   import aiAPi from "@/api/aiAPi"
+  import { useHotelContext } from "@/context/Hotels"
 
   ChartJS.register(CategoryScale, LinearScale, LineElement, PointElement, Title, Tooltip, Legend)
   
@@ -32,7 +33,7 @@ import {
   
   export default function OccupancyChart(props) {
     const [data, setData] = useState([])
- 
+    const { reviewData, setReviewData } = useHotelContext()
     useEffect(() => {
       fetchInquiryData()
     }, [])
@@ -43,6 +44,7 @@ import {
         console.log("Occupancy data:", response)
         // Assuming the response is in the format [{ month: "Jan", occupancy: 352 }, ...]
         setData(response)
+        setReviewData({ occupancy: response, ...reviewData })
       } catch (error) {
         console.error("Error fetching occupancy data:", error)
       }

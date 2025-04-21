@@ -12,6 +12,7 @@ import {
   import { use, useMemo } from "react"
   import aiAPi from "@/api/aiAPi"
   import { useEffect, useState } from "react"
+  import { useHotelContext } from "@/context/Hotels"
 
   // Register Chart.js components
   ChartJS.register(
@@ -42,7 +43,7 @@ import {
   
   export default function RevenueChart(props) {
     const [data, setData] = useState([])
- 
+    const { reviewData, setReviewData } = useHotelContext()
     useEffect(() => {
       fetchInquiryData()
     }, [])
@@ -53,6 +54,7 @@ import {
         console.log("Revenue data:", response)
         // Assuming the response is in the format [{ month: "Jan", revenue: 352 }, ...]
         setData(response)
+        setReviewData({revenue: response, ...reviewData})
       } catch (error) {
         console.error("Error fetching revenue data:", error)
       }

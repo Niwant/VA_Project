@@ -3,6 +3,7 @@ import Groq from "groq-sdk";
 const groq = new Groq({ apiKey: "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" , dangerouslyAllowBrowser: true});
 
 
+
 async function hotel_summarize(data) {
   const completion = await groq.chat.completions
     .create({
@@ -367,5 +368,138 @@ console.log(result);
 return result;
 }
 
+async function events_review(data , events){
+  const filteredData = events.map((event) => ({
+    title : event.title,
+    description: event.description,
+    address: event.address[0],
+  }));
+  const completion = await groq.chat.completions
+    .create({
+      messages: [{
+          role: "user",
+          content: `
+        You are an expert hotel business analyst. I will provide a list of upcoming local events happening near a hotel during a specific time frame.
+        
+        ### Your task:
+        1. Analyze how these events could impact the hotel’s business performance — including occupancy, pricing, operations, and guest behavior.
+        2. Summarize the insights in a clear, professional, business-oriented tone.
+        3. Provide 1-2 strategic recommendations that the hotel should implement in preparation.
+        4. Use only **Markdown format** for the entire response (headings, bullet points, bold text where needed). Do not return any other format or plain text.
+        5. Dont provide any extra commentary or text outside the markdown format.
+        6. Dont provide executive summary
+        
+        ### Structure:
+        - **Event Impact Highlights** (bullet points)
+        - **Strategic Recommendations** (bullet points)
+        
+        ### Hotel Info:
+        ${JSON.stringify(data)}
+        
+        ### Upcoming Events:
+        ${JSON.stringify(filteredData)}
+        `.trim()
+        },
+      ], 
+      model: "llama-3.3-70b-versatile",
+    })
+    const response = completion.choices[0].message.content;
+    return response;
+}
 
-export default {hotel_summarize, occupancy_chart, inquiry, revenue, review_score , price_by_rooms , hotel_price_comparison , sentiment_review};
+async function final_summary(hotel , reviewData) {
+  const completion = await groq.chat.completions
+    .create({
+      messages: [
+        {
+          role: "user",
+          content: `
+        You are an expert hotel business strategist. I will provide you with multiple types of data related to a hotel — including performance analytics, price comparisons, reviews, and nearby events.
+        
+        ### Your Task:
+        Analyze all the input data holistically and provide a professional summary in **Markdown format only**.
+        
+       ### Output Requirements:
+          Split your response into two clearly structured sections, using visually engaging and highly readable **Markdown formatting**.
+
+          ---
+
+          ## 🏨 Helping the Current Business
+
+          Summarize actionable insights to help the **current hotel owner** optimize and improve business, using the provided analytics:
+
+          ### 📊 Areas to Analyze:
+          - Monthly ratings trends
+          - Price per night (compared to competitors)
+          - Inquiries, occupancy, and revenue patterns
+          - Review category sentiment breakdown
+          - Nearby event impact forecasts
+          - Notable pricing or demand anomalies
+
+          ### 🎯 Focus On:
+          - **Growth opportunities**
+          - **Operational risks or bottlenecks**
+          - **Tactical actions** (pricing, staffing, service offerings, promotions)
+
+          > ✅ **Use formatting like:**
+          > - Bolded keywords
+          > - Subsections under headings (e.g., ### Revenue Insights)
+          > - Bullet points and numbered lists
+          > - Tables (e.g., rating/category comparisons)
+          > - Strategic highlight boxes or bold callouts
+
+          ---
+
+          ## 🧭 Section 2: Helping a New Entrant or Competitor
+
+          Summarize insights for a **potential competitor or investor** considering entering the same market or analyzing this hotel.
+
+          ### 🔍 Focus On:
+          - Market saturation or opportunity gaps
+          - Customer behavior and seasonal demand
+          - Competitor pricing and service positioning
+          - Review sentiment advantages/disadvantages
+          - Strategic entry windows based on events or pricing
+
+          > ✅ **Encourage use of:**
+          > - Visual tables for competitive pricing/reviews
+          > - Bullet points for opportunity lists
+          > - Subheadings like ### Entry Timing Insights, ### Differentiation Opportunities
+          > - Clean spacing and logical flow of insights
+
+          ---
+
+          ### 📝 Important Guidelines:
+          - **Output must be in Markdown format only**.
+          - Avoid raw data or JSON — provide **only summarized insights**.
+          - Keep the tone **strategic, insightful, and professional**.
+          - Make it feel like a slide or report section for executives.
+          - Add whitespace between sections, break up long paragraphs, and format clearly.
+
+
+        
+        ### Input:
+        - Hotel Info:
+        ${JSON.stringify(hotel)}
+        - Monthly rating trend
+        - Price chart (by guests and room types)
+        - Competitor pricing (10 hotels)
+        - Review category comparison
+        - Event impact analysis
+        - Inquiry, occupancy, and revenue trends
+        - Sentiment analysis of reviews
+        - Nearby events
+        - Any other relevant data
+        ${JSON.stringify(reviewData)}
+        `.trim()
+        }
+        
+      ],
+      model: "llama-3.3-70b-versatile",
+    })
+  const response = completion.choices[0].message.content;
+  return response;
+}
+
+
+export default {hotel_summarize, occupancy_chart, inquiry, revenue, review_score , price_by_rooms , hotel_price_comparison , sentiment_review , events_review , final_summary};

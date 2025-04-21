@@ -18,7 +18,7 @@ Chart.register(RadialLinearScale, PointElement, LineElement, Filler, Tooltip, Le
 
 export default function SentimentComparisonChart(props) {
   const [data, setData] = useState([]);
-  const { hotels } = useHotelContext();
+  const { hotels , reviewData , setReviewData} = useHotelContext();
 
   console.log("hotels", props.hotel);
 
@@ -31,6 +31,7 @@ export default function SentimentComparisonChart(props) {
     const response = await aiAPI.sentiment_review(props.hotel, hotels);
     console.log(response);
     setData(response);
+    setReviewData({ ...reviewData, sentiment_comparison: response });
   }
 
   const chartData = useMemo(() => {

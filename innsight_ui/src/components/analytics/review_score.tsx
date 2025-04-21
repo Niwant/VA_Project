@@ -12,6 +12,7 @@ import {
   import { use, useMemo } from "react"
   import { useEffect, useState } from "react"
   import aiAPi from "@/api/aiAPi"
+  import { useHotelContext } from "@/context/Hotels"
 
   ChartJS.register(
     CategoryScale,
@@ -38,6 +39,7 @@ import {
   export default function ReviewScoreChart(props) {
     console.log("Hotel props:", props)
     const [data, setData] = useState([])
+    const { reviewData, setReviewData } = useHotelContext()
  
    useEffect(() => {
      fetchInquiryData()
@@ -49,6 +51,7 @@ import {
        console.log("Review Score data:", response)
        // Assuming the response is in the format [{ month: "Jan", review_score: 352 }, ...]
        setData(response)
+        setReviewData({ review_score: response, ...reviewData })
      } catch (error) {
        console.error("Error fetching inquiry data:", error)
      }
