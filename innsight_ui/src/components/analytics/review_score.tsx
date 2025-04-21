@@ -35,7 +35,8 @@ import {
     { x: "Jul", y: 4.9 },
   ]
    */
-  export default function ReviewScoreChart() {
+  export default function ReviewScoreChart(props) {
+    console.log("Hotel props:", props)
     const [data, setData] = useState([])
  
    useEffect(() => {
@@ -44,7 +45,7 @@ import {
  
    const fetchInquiryData = async () => {
      try {
-       const response = await aiAPi.review_score
+       const response = await aiAPi.review_score(props.hotel)
        console.log("Review Score data:", response)
        // Assuming the response is in the format [{ month: "Jan", review_score: 352 }, ...]
        setData(response)
@@ -64,13 +65,6 @@ import {
           tension: 0.3,
           fill: true,
           pointRadius: 5,
-        },
-        {
-          type: "scatter",
-          label: "Guest Ratings",
-          data: samplePoints,
-          backgroundColor: "rgb(16, 185, 129)",
-          pointRadius: 6,
         },
       ],
     }), [data])

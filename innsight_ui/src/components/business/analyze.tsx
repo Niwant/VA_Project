@@ -160,7 +160,7 @@ export default function AnalyzePage() {
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <SentimentComparisonChart />
+            <SentimentComparisonChart hotel={hotel}/>
           </CardContent>
         </Card>
 

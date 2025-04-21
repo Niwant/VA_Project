@@ -40,7 +40,7 @@ import {
     { month: "Dec", revenue: 49204 },
   ] */
   
-  export default function RevenueChart() {
+  export default function RevenueChart(props) {
     const [data, setData] = useState([])
  
     useEffect(() => {
@@ -49,7 +49,7 @@ import {
   
     const fetchInquiryData = async () => {
       try { 
-        const response = await aiAPi.revenue()
+        const response = await aiAPi.revenue(props.hotel)
         console.log("Revenue data:", response)
         // Assuming the response is in the format [{ month: "Jan", revenue: 352 }, ...]
         setData(response)

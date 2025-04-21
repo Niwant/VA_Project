@@ -8,9 +8,11 @@ import {
     Legend,
   } from "chart.js"
   import { Bar } from "react-chartjs-2"
-  import { useMemo, useState } from "react"
+  import { use, useMemo, useState } from "react"
   import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group"
   import { Card } from "@/components/ui/card"
+  import aiAPi from "@/api/aiAPi"
+  import { useEffect } from "react"
   
   ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend)
   
@@ -28,28 +30,47 @@ import {
     },
   }
   
-  export default function PriceChart() {
+  export default function PriceChart(props) {
     const [mode, setMode] = useState("guests")
+    const [data, setData] = useState({})
   
-    
+    useEffect(() => {
+      fetchInquiryData()
+    }, [])
+    const fetchInquiryData = async () => {
+      const response = await aiAPi.price_by_rooms(props.hotel)
+      console.log("Price data:", response)
+      setData(response)
+    }
+
 
     const chartData = useMemo(() => {
+      if (!data || Object.keys(data).length === 0 || !data.labels || !Array.isArray(data.labels)) {
+        return {
+          labels: [],
+          datasets: [],
+        };
+      }
+    
       const source =
-        mode === "guests" ? data.pricesByGuests : data.pricesByRoomType
-  
-      const datasets = Object.entries(source).map(([label, values]) => ({
-        label,
-        data: values,
-        backgroundColor: `rgba(${Math.floor(Math.random() * 200)}, ${
-          Math.floor(Math.random() * 150) + 100
-        }, ${Math.floor(Math.random() * 180)}, 0.6)`,
-      }))
-  
+        mode === "guests" ? data.pricesByGuests : data.pricesByRoomType;
+    
+      const datasets = source && typeof source === "object"
+        ? Object.entries(source).map(([label, values]) => ({
+            label,
+            data: Array.isArray(values) ? values : [],
+            backgroundColor: `rgba(${Math.floor(Math.random() * 200)}, ${
+              Math.floor(Math.random() * 150) + 100
+            }, ${Math.floor(Math.random() * 180)}, 0.6)`,
+          }))
+        : [];
+    
       return {
         labels: data.labels,
         datasets,
-      }
-    }, [mode])
+      };
+    }, [mode, data]);
+    
   
     const options = {
       responsive: true,

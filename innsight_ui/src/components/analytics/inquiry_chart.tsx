@@ -29,7 +29,7 @@ ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend)
   { month: "Dec", inquiries: 288 },
 ] */
 
-export default function InquiryChart() {
+export default function InquiryChart(props) {
   const [data, setData] = useState([])
 
   useEffect(() => {
@@ -38,7 +38,7 @@ export default function InquiryChart() {
 
   const fetchInquiryData = async () => {
     try {
-      const response = await aiApi.inquiry()
+      const response = await aiApi.inquiry(props.hotel)
       console.log("Inquiry data:", response)
       // Assuming the response is in the format [{ month: "Jan", inquiries: 352 }, ...]
       setData(response)

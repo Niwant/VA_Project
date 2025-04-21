@@ -30,7 +30,7 @@ import {
     { month: "Dec", occupancy: 89 },
   ] */
   
-  export default function OccupancyChart() {
+  export default function OccupancyChart(props) {
     const [data, setData] = useState([])
  
     useEffect(() => {
@@ -39,7 +39,7 @@ import {
   
     const fetchInquiryData = async () => {
       try {
-        const response = await aiAPi.occupancy_chart()
+        const response = await aiAPi.occupancy_chart(props.hotel)
         console.log("Occupancy data:", response)
         // Assuming the response is in the format [{ month: "Jan", occupancy: 352 }, ...]
         setData(response)
